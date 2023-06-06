@@ -1,6 +1,7 @@
 const express = require("express");
 const { create } = require("express-handlebars");
-const fs = require('fs');
+const { v4: uuid } = require('uuid');
+const Usuario = require("./model/Usuario");
 
 //instancia de express.
 const app = express();
@@ -10,10 +11,16 @@ const hbs = create({
     partialsDir: ["views/partials/"],
 });
 
+
 //configuramos express-handlebars como motor de plantilla del proyecto para renderizar vistas
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 app.set("views", __dirname + "/views");
+
+//MIDDLEWARES
+
+//acepta la info enviada por payload
+app.use(express.json());
 
 //establecemos el directorio public en modo público.
 app.use(express.static("public"));
@@ -31,82 +38,64 @@ app.listen(
     console.log("Servidor escuchando en http://localhost:" + PORT)
 );
 
-//RUTAS DE VISTAS
+//RUTAS
+
+//Inicio
 app.get(["/", "/home"], (req, res) => {
     res.render("home");
 });
 
+//Acerca
 app.get("/about", (req, res) => {
     res.render("about");
 });
 
-app.get("/products", (req, res) => {
-    res.render("products", {
-        productos: ["Pera", "Manzana", "Sandia", "Naranja", "Melón"],
-    });
+//todos los usuarios
+app.get("/users", async (req, res) => {
+    let usuario = new Usuario();
+    let respuesta = usuario.findAll()
+    respuesta
+        .then((data) => {
+            res.render("users", {
+                usuarios: data.usuarios,
+            });
+        })
+        .catch((error) => {
+            res.render('users', {
+                error,
+            });
+        });
 });
 
-app.get("/users", (req, res) => {
-    res.render("users", {
-        usuarios: ["Carlos", "Mauricio", "María", "Juana"],
-    });
+//Crear nuevo Usuario
+app.post('/usuarios', async (req, res) => {
+    try {
+        let { nombre, apellido, email } = req.body;
+        let id = uuid().slice(0, 6);
+        let newUser = new Usuario(id, nombre, apellido, email, telefono)
+        let reply = await newUser.save()
+        res.status(201).send({ code: 201, message: reply })
+    } catch (error) {
+        res.status(500).send({ code: 500, message: 'Ocurrio un error' })
+    }
+})
+
+//Actualizar usuario
+app.get("/updateuser/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        let usuario = new Usuario();
+        let found = await usuario.findById(id);
+        console.log("usuario:", found);
+        res.render("update_user", {
+            usuario: found,
+        });
+    } catch (error) {
+        res.render("update_user", {
+            error: true,
+        });
+    }
 });
 
-app.get("/users2", (req, res) => {
-    res.render("usuarios", {
-        user2: [
-            {
-                id: 1,
-                nombre: "Carlos",
-                apellido: "Perez",
-                email: "aaa@aaa.com",
-                telefono: "123456789"
-            },
-            {
-                id: 2,
-                nombre: "Darold",
-                apellido: "Trench",
-                email: "darold@aaa.com",
-                telefono: "123456789"
-            },
-            {
-                id: 3,
-                nombre: "Kevin",
-                apellido: "Smith",
-                email: "Kevin@aaa.com",
-                telefono: "123456789"
-            },
-            {
-                id: 4,
-                nombre: "Jazmin",
-                apellido: "Smith",
-                email: "Jaz@aaa.com",
-                telefono: "123456789"
-            },
-            {
-                id: 5,
-                nombre: "Paloma",
-                apellido: "Smith",
-                email: "Paloma@aaa.com",
-                telefono: "123456789"
-            },
-        ]
-    });
-});
+//Eliminar usuario
 
-let baseDato = fs.readFileSync(__dirname+"/bbdd/usuarios.json", "utf8")
-let datos = JSON.parse(baseDato)
-
-
-app.get("/users3", (req, res) => {
-    res.render("usuarios", {
-        user2: datos
-    });
-});
-
-/* Crear una vista llamada usuarios:
-Utilizar tablas para mostrar 5 usuarios con los siguientes datos:
-Id, nombre, apellido, email y teléfono.
-Utilizar helpers que muestren contenido dinámico dependiendo si existen 
-o no usuarios para mostrar, iterar el array de usuarios.
-Actividad: 20 MINUTOS EN SALAS VIRTUALES. */
