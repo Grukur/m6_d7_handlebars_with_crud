@@ -1,0 +1,68 @@
+
+[
+
+    {
+        "id": "1",
+        "nombre": "Carlos",
+        "apellido": "Perez",
+        "email": "aaa@aaa.com",
+        "telefono": "123456789"
+    },
+    {
+        "id": "2",
+        "nombre": "Darold",
+        "apellido": "Trench",
+        "email": "darold@aaa.com",
+        "telefono": "123456789"
+    },
+    {
+        "id": "3",
+        "nombre": "Kevin",
+        "apellido": "Smith",
+        "email": "Kevin@aaa.com",
+        "telefono": "123456789"
+    },
+    {
+        "id": "4",
+        "nombre": "Jazmin",
+        "apellido": "Smith",
+        "email": "Jaz@aaa.com",
+        "telefono": "123456789"
+    },
+    {
+        "id": "5",
+        "nombre": "Paloma",
+        "apellido": "Smith",
+        "email": "Paloma@aaa.com",
+        "telefono": "123456789"
+    },
+    {
+        "id": "6",
+        "nombre": "Jorge",
+        "apellido": "Trench",
+        "email": "Jorge@aaa.com",
+        "telefono": "123456789"
+    },
+    {
+        "id": "7",
+        "nombre": "Alfredo",
+        "apellido": "Smith",
+        "email": "Alfredo@aaa.com",
+        "telefono": "123456789"
+    },
+    {
+        "id": "8",
+        "nombre": "Naty",
+        "apellido": "Smith",
+        "email": "Naty@aaa.com",
+        "telefono": "123456789"
+    },
+    {
+        "id": "9",
+        "nombre": "Paola",
+        "apellido": "Smith",
+        "email": "Paola@aaa.com",
+        "telefono": "123456789"
+    }
+]
+    
